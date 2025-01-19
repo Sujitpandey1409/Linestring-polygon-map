@@ -37,21 +37,29 @@ function Map({setCoordinates, setIsModalOpen}) {
 
   const startDrawing = (type) => {
     if (!map) return;
-
+  
     const drawInteraction = new Draw({
       source: vectorSource,
-      type: type,
+      type: type, // 'LineString' or 'Polygon'
     });
-
+  
     map.addInteraction(drawInteraction);
-    
+    setIsModalOpen(true)
     drawInteraction.on('drawend', (event) => {
-        const coords = event.feature.getGeometry().getCoordinates();
-        setCoordinates((prev) => [...prev, coords]);
-        setIsModalOpen(true)
+      const geometry = event.feature.getGeometry();
+      const coords = geometry.getCoordinates();
+      
+      if (type === 'Polygon') {
+        const flatCoordinates = coords[0]; // Extract only the outer ring for simplicity
+        setCoordinates((prev) => [...prev, { type: 'Polygon', coordinates: flatCoordinates }]);
+      } else {
+        setCoordinates((prev) => [...prev, { type: 'LineString', coordinates: coords }]);
+      }
+      
       map.removeInteraction(drawInteraction);
     });
   };
+  
 
   return (
     <div>

@@ -5,7 +5,7 @@ import './styles/Map.css';
 
 function App() {
   const [coordinates, setCoordinates] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="App">
@@ -13,6 +13,7 @@ function App() {
       {isModalOpen && (
         <MissionModal 
           coordinates={coordinates} 
+          setCoordinates={setCoordinates}
           closeModal={() => setIsModalOpen(false)}
         />
       )}
